@@ -13,6 +13,7 @@ export const UserItem = ({ user, onDelete }) => {
 
     return (
         <div className='p-2 bg-primary rounded-3 my-2 text-white d-flex justify-content-between'>
+            <div className='my-auto me-2'><img className='rounded-circle' height={50} src={user.photo} alt="user avatar" /></div>
             <div className='row row-cols-2 row-cols-lg-3 g-2'>
                 <div className='col'><b>Nombres:</b> {user.firstname ?? 'N/A'}</div>
                 <div className='col'><b>Apellidos:</b> {user.lastname ?? 'N/A'}</div>

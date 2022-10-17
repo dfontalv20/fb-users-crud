@@ -5,7 +5,9 @@ const usersCol = collection(db, 'users');
 
 export async function getUsers() {
     const usersSnapshot = await getDocs(usersCol);
-    const usersList = usersSnapshot.docs.map(doc => ({id: doc.id,...doc.data()}));
+    let usersList = usersSnapshot.docs.map(doc => ({id: doc.id,...doc.data()}));
+    //Add random picture
+    usersList = usersList.map(user => ({...user, photo: "https://picsum.photos/200"}))
     return usersList;
 }
 
