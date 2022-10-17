@@ -3,13 +3,16 @@ import React from 'react';
 import { useState } from "react";
 import { addUser } from '../services/users.service';
 
+const genderList = ['Masculino', 'Femenino']
+
 export const UserForm = ({ onSave }) => {
-  const [id, setId] = useState('');
   const [firstname, setfirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAdress] = useState('');
   const [birthday, setBirthday] = useState('');
+  const [gender, setGender] = useState('');
+  const [job, setJob] = useState('');
 
   const [validationMessages, setValidationMessages] = useState({})
 
@@ -17,17 +20,18 @@ export const UserForm = ({ onSave }) => {
     event.preventDefault();
     if (validData()) {
       saveUser();
-      setId('')
       setfirstname('')
       setLastname('')
       setAdress('')
       setPhone('')
       setBirthday('')
+      setGender('')
+      setJob('')
     }
   }
 
   const saveUser = async () => {
-    await addUser({ firstname, lastname, phone, address, birthday });
+    await addUser({ firstname, lastname, phone, address, birthday, gender, job });
     if (onSave) onSave()
   }
 
@@ -71,12 +75,28 @@ export const UserForm = ({ onSave }) => {
       setValidationMessages(prev => ({ ...prev, phone: 'Debe ingresar un telefono' }));
       return false;
     }
-    if (!Number.isInteger(Number(id)) || parseInt(phone) <= 0) {
+    if (!Number.isInteger(Number(phone)) || parseInt(phone) <= 0) {
       setValidationMessages(prev => ({ ...prev, phone: 'El telefono debe ser un entero positivo' }));
       return false;
     }
     setValidationMessages(prev => ({ ...prev, phone: null }));
     return true;
+  }
+  const validJob = () => {
+    if (!job || job.trim === '') {
+      setValidationMessages(prev => ({ ...prev, job: 'Ingrese un cargo' }))
+      return false
+    }
+    setValidationMessages(prev => ({ ...prev, job: null }))
+    return true
+  }
+  const validGender = () => {
+    if (!gender || !genderList.includes(gender)) {
+      setValidationMessages(prev => ({ ...prev, gender: 'Seleccione un genero valido' }))
+      return false
+    }
+    setValidationMessages(prev => ({ ...prev, gender: null }))
+    return true
   }
 
   const validData = () => {
@@ -84,7 +104,9 @@ export const UserForm = ({ onSave }) => {
       & validLastName()
       & validPhone()
       & validAddress()
-      & validBirthday();
+      & validBirthday()
+      & validGender()
+      & validJob()
   }
   //===================================
 
@@ -114,6 +136,19 @@ export const UserForm = ({ onSave }) => {
             <label className="form-label">Telefono</label>
             <input className={`form-control form-control-sm ${validationMessages.phone ? 'is-invalid' : ''}`} type="number" min={0} value={phone} onChange={e => setPhone(e.target.value)} />
             <div className="invalid-feedback d-block">{validationMessages.phone ?? ''}</div>
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Genero</label>
+            <select className={`form-select form-select-sm ${validationMessages.gender ? 'is-invalid' : ''}`} value={gender} onChange={e => setGender(e.target.value)}>
+              <option selected hidden>-</option>
+              {genderList.map(gender => <option>{gender}</option>)}
+            </select>
+            <div className="invalid-feedback d-block">{validationMessages.gender ?? ''}</div>
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Cargo</label>
+            <input className={`form-control form-control-sm ${validationMessages.job ? 'is-invalid' : ''}`} value={job} onChange={e => setJob(e.target.value)} />
+            <div className="invalid-feedback d-block">{validationMessages.job ?? ''}</div>
           </div>
           <div className="mb-3">
             <label className="form-label">Fecha de Nacimiento</label>

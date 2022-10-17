@@ -26,7 +26,7 @@ function App() {
           <UserForm onSave={() => loadUsers()} />
         </div>
         <div className='col-12 col-lg-9'>
-          <UsersList users={users} loading={loadingUsers} />
+          <UsersList users={users} loading={loadingUsers} onUserDeleted={() => loadUsers()} onRefresh={() => loadUsers()}/>
         </div>
       </div>
     </div>
