@@ -159,8 +159,8 @@ export const UserForm = ({ onSave, onCancel, user, editing }) => {
           <div className="mb-3">
             <label className="form-label">Genero</label>
             <select className={`form-select form-select-sm ${validationMessages.gender ? 'is-invalid' : ''}`} disabled={saving} value={gender} onChange={e => setGender(e.target.value)}>
-              <option selected hidden>-</option>
-              {genderList.map(gender => <option>{gender}</option>)}
+              <option hidden>-</option>
+              {genderList.map((gender, idx) => <option key={idx}>{gender}</option>)}
             </select>
             <div className="invalid-feedback d-block">{validationMessages.gender ?? ''}</div>
           </div>
