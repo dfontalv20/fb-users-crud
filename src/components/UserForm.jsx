@@ -18,6 +18,7 @@ export const UserForm = ({ onSave, onCancel, user, editing }) => {
   const [validationMessages, setValidationMessages] = useState({})
 
   useEffect(() => {
+    setValidationMessages({})
     if (!user) return resetFields()
     setFirstname(user.firstname)
     setLastname(user.lastname)
@@ -175,7 +176,13 @@ export const UserForm = ({ onSave, onCancel, user, editing }) => {
           </div>
           <div className='d-flex justify-content-center'>
             <input type='submit' className={`btn btn-${editing ? 'warning' : 'primary'} w-50`} disabled={saving} value={editing ? 'Actualizar' : 'Agregar'} />
-            {editing && <button type='button' className='btn btn-danger w-50' disabled={saving} onClick={() => onCancel()}>Cancelar</button>}
+            {editing &&
+              <button type='button' className='btn btn-danger w-50' disabled={saving}
+                onClick={() => {
+                  setValidationMessages({})
+                  onCancel()
+                }
+                }>Cancelar</button>}
           </div>
         </div>
       </div>
