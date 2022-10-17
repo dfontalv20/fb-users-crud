@@ -132,7 +132,7 @@ export const UserForm = ({ onSave, onCancel, user, editing }) => {
     <form action='#' method='get' onSubmit={e => handleSubmit(e)}>
       <div className="card">
         <div className="card-header">
-          <h3 className="card-title">Agregar Usuario</h3>
+          <h3 className="card-title">{editing ? 'Editar Usuario' : 'Agregar Usuario'}</h3>
         </div>
         <div className="card-body">
           <div className="mb-3">
