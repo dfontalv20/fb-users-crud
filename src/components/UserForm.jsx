@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { useState } from "react";
-import { addUser } from '../services/users.service';
+import { addUser, updateUser } from '../services/users.service';
 
 const genderList = ['Masculino', 'Femenino']
 
-export const UserForm = ({ onSave }) => {
-  const [firstname, setfirstname] = useState('');
+export const UserForm = ({ onSave, onCancel, user, editing }) => {
+  const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [phone, setPhone] = useState('');
   const [address, setAdress] = useState('');
@@ -16,22 +16,39 @@ export const UserForm = ({ onSave }) => {
 
   const [validationMessages, setValidationMessages] = useState({})
 
-  const handleSubmit = event => {
+  useEffect(() => {
+    if (!user) return resetFields()
+    setFirstname(user.firstname)
+    setLastname(user.lastname)
+    setPhone(user.phone)
+    setAdress(user.address)
+    setBirthday(user.birthday)
+    setGender(user.gender)
+    setJob(user.job)
+  }, [user])
+
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (validData()) {
-      saveUser();
-      setfirstname('')
-      setLastname('')
-      setAdress('')
-      setPhone('')
-      setBirthday('')
-      setGender('')
-      setJob('')
+      await saveUser();
+      resetFields();
     }
   }
 
+  const resetFields = () => {
+    setFirstname('')
+    setLastname('')
+    setAdress('')
+    setPhone('')
+    setBirthday('')
+    setGender('')
+    setJob('')
+  }
+
   const saveUser = async () => {
-    await addUser({ firstname, lastname, phone, address, birthday, gender, job });
+    const userData = { firstname, lastname, phone, address, birthday, gender, job }
+    editing ? await updateUser(user.id, userData) : await addUser(userData)
     if (onSave) onSave()
   }
 
@@ -119,7 +136,7 @@ export const UserForm = ({ onSave }) => {
         <div className="card-body">
           <div className="mb-3">
             <label className="form-label">Nombres</label>
-            <input className={`form-control form-control-sm ${validationMessages.name ? 'is-invalid' : ''}`} type="text" min={0} value={firstname} onChange={e => setfirstname(e.target.value)} />
+            <input className={`form-control form-control-sm ${validationMessages.name ? 'is-invalid' : ''}`} type="text" min={0} value={firstname} onChange={e => setFirstname(e.target.value)} />
             <div className="invalid-feedback d-block">{validationMessages.name ?? ''}</div>
           </div>
           <div className="mb-3">
@@ -155,8 +172,9 @@ export const UserForm = ({ onSave }) => {
             <input className={`form-control form-control-sm ${validationMessages.birthday ? 'is-invalid' : ''}`} type="date" value={birthday} onChange={e => setBirthday(e.target.value)} />
             <div className="invalid-feedback d-block">{validationMessages.birthday ?? ''}</div>
           </div>
-          <div className='d-flex'>
-            <input type='submit' className="btn btn-primary w-100" value='Agregar' />
+          <div className='d-flex justify-content-center'>
+            <input type='submit' className={`btn btn-${editing ? 'warning' : 'primary'} w-50`} value={editing ? 'Actualizar' : 'Agregar'} />
+            {editing && <button type='button' className='btn btn-danger w-50' onClick={() => onCancel()}>Cancelar</button>}
           </div>
         </div>
       </div>

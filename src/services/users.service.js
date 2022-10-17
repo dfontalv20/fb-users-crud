@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDocs } from 'firebase/firestore/lite';
+import { addDoc, updateDoc, collection, deleteDoc, doc, getDocs } from 'firebase/firestore/lite';
 import db from '../config/firebase';
 
 const usersCol = collection(db, 'users');
@@ -13,6 +13,10 @@ export async function getUsers() {
 
 export async function addUser(userData) {
     return await addDoc(usersCol, userData);
+}
+
+export async function updateUser(userId, userData) {
+    return await updateDoc(doc(db, "users", userId), userData);
 }
 
 export async function deleteUser(id) {

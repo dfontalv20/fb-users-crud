@@ -2,7 +2,7 @@ import React from 'react'
 import Loader from './Loader';
 import { UserItem } from './UserItem';
 
-export const UsersList = ( {users, loading, onRefresh, onUserDeleted} ) => {
+export const UsersList = ( {users, loading, onRefresh, onUserDeleted, onUserEdit} ) => {
 
     return (
         <div className='card'>
@@ -19,7 +19,7 @@ export const UsersList = ( {users, loading, onRefresh, onUserDeleted} ) => {
                 {loading ?
                     <Loader />
                     :
-                    users.map((user, index) => <UserItem user={user} key={index} onDelete={() => onUserDeleted()}/>)}
+                    users.map((user, index) => <UserItem user={user} key={index} onDelete={() => onUserDeleted()} onEdit={onUserEdit}/>)}
             </div>
         </div>
     )
